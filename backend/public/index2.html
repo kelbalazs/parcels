@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parcel Logger</title>
+  <!-- Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+  />
+  <!-- React -->
+  <!-- Replace the React CDN URLs with the CORS proxy URL -->
+<script crossorigin src="https://cors-anywhere.herokuapp.com/https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://cors-anywhere.herokuapp.com/https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="text/babel">
+    class DeliveryForm extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          apartments: [],
+          selectedApartmentId: null,
+          deliveries: [],
+          newDelivery: {
+            apartment_id: null,
+            courier: '',
+            adresse_name: '',
+            description: '',
+            delivery_date: '',
+            delivery_time: '',
+            status: false
+          }
+        };
+      }
+
+      componentDidMount() {
+        this.fetchApartments();
+        this.fetchDeliveries();
+      }
+
+      fetchApartments = () => {
+        fetch('http://localhost:3000/apartments')
+          .then(response => response.json())
+          .then(apartments => {
+            this.setState({ apartments });
+            this.setState({ selectedApartmentId: apartments[0].id });
+            this.fetchDeliveries(apartments[0].id);
+          })
+          .catch(error => console.error('Error fetching apartments:', error));
+      };
+
+      fetchDeliveries = (apartmentId = null) => {
+        let url = 'http://localhost:3000/deliveries';
+        if (apartmentId) {
+          url = `http://localhost:3000/deliveries?apartment_id=${apartmentId}`;
+        }
+
+        fetch(url)
+          .then(response => response.json())
+          .then(deliveries => this.setState({ deliveries }))
+          .catch(error => console.error('Error fetching existing deliveries:', error));
+      };
+
+      handleApartmentChange = event => {
+        this.setState({ selectedApartmentId: event.target.value });
+        this.fetchDeliveries(event.target.value);
+      };
+
+      handleInputChange = event => {
+        this.setState(prevState => ({
+          newDelivery: {
+            ...prevState.newDelivery,
+            [event.target.name]: event.target.value
+          }
+        }));
+      };
+
+      handleSubmit = async event => {
+        event.preventDefault();
+        const { newDelivery } = this.state;
+
+        try {
+          const response = await fetch('http://localhost:3000/deliveries', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newDelivery)
+          });
+
+          if (response.ok) {
+            alert('Delivery submitted successfully');
+            this.setState({
+              newDelivery: {
+                apartment_id: null,
+                courier: '',
+                adresse_name: '',
+                description: '',
+                delivery_date: '',
+                delivery_time: '',
+                status: false
+              }
+            });
+            this.fetchDeliveries(this.state.selectedApartmentId);
+          } else {
+            alert('Error submitting delivery');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred while submitting the delivery');
+        }
+      };
+
+      updateDeliveryStatus = (deliveryId, newStatus) => {
+        fetch(`http://localhost:3000/deliveries/${deliveryId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: newStatus })
+        })
+          .then(response => {
+            if (response.ok) {
+              console.log('Delivery status updated successfully');
+              this.fetchDeliveries(this.state.selectedApartmentId);
+            } else {
+              console.error('Error updating delivery status');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      };
+
+      render() {
+        const { apartments, selectedApartmentId, deliveries, newDelivery } = this.state;
+
+        return (
+          <div className="container my-5">
+            <h2 className="mb-4">Add Delivery</h2>
+            <form onSubmit={this.handleSubmit} className="mb-4">
+              <div className="mb-3">
+                <label htmlFor="apartment" className="form-label">Apartment:</label>
+                <select
+                  id="apartment"
+                  name="apartment"
+                  className="form-select"
+                  value={selectedApartmentId || ''}
+                  onChange={this.handleApartmentChange}
+                  required
+                >
+                  {apartments.map(apartment => (
+                    <option key={apartment.id} value={apartment.id}>{apartment.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="courier" className="form-label">Courier:</label>
+                <input
+                  type="text"
+                  id="courier"
+                  name="courier"
+                  className="form-control"
+                  value={newDelivery.courier}
+                  onChange={this.handleInputChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="addressName" className="form-label">Address Name:</label>
+                <input
+                  type="text"
+                  id="addressName"
+                  name="adresse_name"
+                  className="form-control"
+                  value={newDelivery.adresse_name}
+                  onChange={this.handleInputChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="description" className="form-label">Description:</label>
+                <input
+                  type="text"
+                  id="description"
+                  name="description"
+                  className="form-control"
+                  value={newDelivery.description}
+                  onChange={this.handleInputChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="deliveryDate" className="form-label">Delivery Date:</label>
+                <input
+                  type="date"
+                  id="deliveryDate"
+                  name="delivery_date"
+                  className="form-control"
+                  value={newDelivery.delivery_date}
+                  onChange={this.handleInputChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="deliveryTime" className="form-label">Delivery Time:</label>
+                <input
+                  type="time"
+                  id="deliveryTime"
+                  name="delivery_time"
+                  className="form-control"
+                  value={newDelivery.delivery_time}
+                  onChange={this.handleInputChange}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">Submit</button>
+            </form>
+
+            <div className="existing-deliveries">
+              <h2>Existing Deliveries</h2>
+              <ul className="list-group">
+                {deliveries.map(delivery => (
+                  <li key={delivery.id} className="list-group-item delivery-item">
+                    <p>
+                      Courier: {delivery.courier}, Address Name: {delivery.adresse_name}, Description: {delivery.description}, Delivery Date: {new Date(delivery.delivery_date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}, Delivery Time: {delivery.delivery_time}, Status: {delivery.status ? 'Delivered' : 'Pending'}
+                    </p>
+                    <button
+                      className={`btn btn-sm ${delivery.status ? 'btn-warning' : 'btn-success'}`}
+                      onClick={() => this.updateDeliveryStatus(delivery.id, !delivery.status)}
+                    >
+                      {delivery.status ? 'Mark as Pending' : 'Mark as Delivered'}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<DeliveryForm />, document.getElementById('app'));
+  </script>
+</body>
+</html>

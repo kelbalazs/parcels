@@ -1,0 +1,154 @@
+{
+  "apartments": [
+    {
+      "id": "1",
+      "name": "Apartment 1"
+    },
+    {
+      "id": "2",
+      "name": "Apartment 2"
+    },
+    {
+      "id": "3",
+      "name": "Apartment 3"
+    },
+    {
+      "id": "4",
+      "name": "Apartment 4"
+    },
+    {
+      "id": "5",
+      "name": "Apartment 5"
+    },
+    {
+      "id": "6",
+      "name": "Apartment 6"
+    },
+    {
+      "id": "7",
+      "name": "Apartment 7"
+    },
+    {
+      "id": "8",
+      "name": "Apartment 8"
+    },
+    {
+      "id": "9",
+      "name": "Apartment 9"
+    },
+    {
+      "id": "10",
+      "name": "Apartment 10"
+    },
+    {
+      "id": "11",
+      "name": "Apartment 11"
+    },
+    {
+      "id": "12",
+      "name": "Apartment 12"
+    },
+    {
+      "id": "13",
+      "name": "Apartment 13"
+    },
+    {
+      "id": "14",
+      "name": "Apartment 14"
+    },
+    {
+      "id": "15",
+      "name": "Apartment 15"
+    },
+    {
+      "id": "16",
+      "name": "Apartment 16"
+    },
+    {
+      "id": "17",
+      "name": "Apartment 17"
+    },
+    {
+      "id": "18",
+      "name": "Apartment 18"
+    },
+    {
+      "id": "19",
+      "name": "Apartment 19"
+    },
+    {
+      "id": "20",
+      "name": "Penthouse 1"
+    },
+    {
+      "id": "21",
+      "name": "Penthouse 2"
+    },
+    {
+      "id": "22",
+      "name": "Penthouse 3"
+    }
+  ],
+  "deliveries": [
+    {
+      "id": "1",
+      "apartment_id": 5,
+      "courier": "Courier A",
+      "adresse_name": "Delivery 1",
+      "description": "Description 1",
+      "delivery_date": "2023-04-01",
+      "delivery_time": "10:00:00",
+      "status": false
+    },
+    {
+      "id": "2",
+      "apartment_id": 7,
+      "courier": "Courier B",
+      "adresse_name": "Delivery 2",
+      "description": "Description 2",
+      "delivery_date": "2023-04-02",
+      "delivery_time": "11:30:00",
+      "status": false
+    },
+    {
+      "id": "3",
+      "apartment_id": 3,
+      "courier": "Courier C",
+      "adresse_name": "Delivery 3",
+      "description": "Description 3",
+      "delivery_date": "2023-04-03",
+      "delivery_time": "14:00:00",
+      "status": false
+    },
+    {
+      "id": "72cf",
+      "apartment_id": "1",
+      "courier": "deeepeede ",
+      "adresse_name": "dsfsds",
+      "description": "fs",
+      "delivery_date": "2024-04-12",
+      "delivery_time": "14:32",
+      "status": false
+    },
+    {
+      "id": "5dfe",
+      "apartment_id": "1",
+      "courier": "pentek",
+      "adresse_name": "sdfsd",
+      "description": "sdsdf",
+      "delivery_date": "2024-04-12",
+      "delivery_time": "09:28",
+      "status": false
+    },
+    {
+      "id": "0251",
+      "apartment_id": "1",
+      "courier": "szombat",
+      "adresse_name": "reggel",
+      "description": "sdfsdfs",
+      "delivery_date": "2024-04-13",
+      "delivery_time": "08:54",
+      "status": false
+    }
+  ]
+}
